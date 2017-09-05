@@ -192,7 +192,7 @@ def run():
         correct_label_placeholder = tf.placeholder(dtype=tf.int32, shape=(None, None, None, num_classes))
         learning_rate = tf.placeholder(dtype=tf.float32)
         epochs = 6
-        batch_size = 32
+        batch_size = 8
 
         # Build NN using load_vgg, layers, and optimize function
         image_input, keep_prob, layer3_out, layer4_out, layer7_out = load_vgg(sess, vgg_path)
