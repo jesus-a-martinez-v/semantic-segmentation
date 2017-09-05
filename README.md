@@ -4,7 +4,7 @@ Labelling the pixels of a road in images using a Fully Convolutional Network (FC
 
 ### Setup
 ##### Frameworks and Packages
-Make sure you have the following is installed:
+Make sure you have the following installed:
  - [Python 3](https://www.python.org/)
  - [TensorFlow](https://www.tensorflow.org/)
  - [NumPy](http://www.numpy.org/)
