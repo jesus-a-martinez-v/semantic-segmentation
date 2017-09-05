@@ -57,25 +57,26 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     """
     regularization_parameter = 1e-3
     regularizer = tf.contrib.layers.l2_regularizer(regularization_parameter)
+    initializer = tf.truncated_normal_initializer(stddev=1e-2)
 
     # Let's use 1x1 convolutions to preserve spatial information.
     one_by_one_convolution_vgg_layer_out3 = tf.layers.conv2d(vgg_layer3_out,
                                                              num_classes,
                                                              1,
-                                                             1,
                                                              padding="same",
+                                                             kernel_initializer=initializer,
                                                              kernel_regularizer=regularizer)
     one_by_one_convolution_vgg_layer_out4 = tf.layers.conv2d(vgg_layer4_out,
                                                              num_classes,
                                                              1,
-                                                             1,
                                                              padding="same",
+                                                             kernel_initializer=initializer,
                                                              kernel_regularizer=regularizer)
     one_by_one_convolution_vgg_layer_out7 = tf.layers.conv2d(vgg_layer7_out,
                                                              num_classes,
                                                              1,
-                                                             1,
                                                              padding="same",
+                                                             kernel_initializer=initializer,
                                                              kernel_regularizer=regularizer)
 
     # Now, let's reverse our convolution process by "deconvoluting" the layers and applying skip connections.
@@ -84,6 +85,7 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
                                         4,
                                         2,
                                         padding="same",
+                                        kernel_initializer=initializer,
                                         kernel_regularizer=regularizer)
     output = tf.add(output, one_by_one_convolution_vgg_layer_out4)
 
@@ -92,6 +94,7 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
                                         4,
                                         2,
                                         padding="same",
+                                        kernel_initializer=initializer,
                                         kernel_regularizer=regularizer)
 
     output = tf.add(output, one_by_one_convolution_vgg_layer_out3)
@@ -101,6 +104,7 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
                                         16,
                                         8,
                                         padding="same",
+                                        kernel_initializer=initializer,
                                         kernel_regularizer=regularizer)
 
     return output
@@ -150,7 +154,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
             feed_dict = {input_image: image,
                          correct_label: label,
                          keep_prob: 0.5,
-                         learning_rate: 1e-5}
+                         learning_rate: 1e-4}
 
             _, loss = sess.run([train_op, cross_entropy_loss], feed_dict=feed_dict)
             print("Epoch: ", epoch, "Loss: ", loss, "Batch: ", batch_number)
